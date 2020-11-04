@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "265942737658",
+    "firebase_url": "https://connect-globe-fe5c3.firebaseio.com",
+    "project_id": "connect-globe-fe5c3",
+    "storage_bucket": "connect-globe-fe5c3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:265942737658:android:0fb8fcd8a12f89a5b41f43",
+        "android_client_info": {
+          "package_name": "com.example.connect_globe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "265942737658-1rbh8nec3gd7v10eqrsn1ri5im6668q3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcNgr6x6FT60gBs7Sr4zN_K__YHD8a5nE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "265942737658-1rbh8nec3gd7v10eqrsn1ri5im6668q3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
