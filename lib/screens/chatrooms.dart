@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connect_globe/helper/authenticate.dart';
 import 'package:connect_globe/helper/constants.dart';
 import 'package:connect_globe/helper/helperfunctions.dart';
 import 'package:connect_globe/screens/chat.dart';
 import 'package:connect_globe/screens/search.dart';
+import 'package:connect_globe/screens/setting.dart';
 import 'package:connect_globe/services/auth.dart';
 import 'package:connect_globe/services/database.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +39,12 @@ class _ChatRoomState extends State<ChatRoom> {
     );
   }
 
+  List<Choice> choices = const <Choice>[
+    const Choice(title: 'Settings', icon: Icons.settings),
+    const Choice(title: 'LogOut', icon: Icons.exit_to_app),
+  ];
+
+
   @override
   void initState() {
     getUserInfogetChats();
@@ -45,6 +53,7 @@ class _ChatRoomState extends State<ChatRoom> {
 
   getUserInfogetChats() async {
     Constants.myName = await HelperFunctions.getUserNameSharedPreference();
+    Constants.myEmail = await HelperFunctions.getUserEmailSharedPreference();
     DatabaseMethods().getUserChats(Constants.myName).then((snapshots) {
       setState(() {
         chatRooms = snapshots;
@@ -53,6 +62,17 @@ class _ChatRoomState extends State<ChatRoom> {
       });
     });
   }
+
+  void onItemMenuPress(Choice choice) {
+    if (choice.title == 'LogOut') {
+      AuthService().signOut();
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => Authenticate()));
+    } else {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ChatSettings()));
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -66,17 +86,30 @@ class _ChatRoomState extends State<ChatRoom> {
         elevation: 5.0,
         centerTitle: false,
         actions: [
-          GestureDetector(
-            onTap: () {
-              AuthService().signOut();
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => Authenticate()));
+          PopupMenuButton<Choice>(
+            onSelected: onItemMenuPress,
+            itemBuilder: (BuildContext context) {
+              return choices.map((Choice choice) {
+                return PopupMenuItem<Choice>(
+                    value: choice,
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          choice.icon,
+                          color: Colors.black,
+                        ),
+                        Container(
+                          width: 10.0,
+                        ),
+                        Text(
+                          choice.title,
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ],
+                    ));
+              }).toList();
             },
-            child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Icon(Icons.exit_to_app,size: 30,),
-            ),
-          )
+          ),
         ],
       ),
       body: Container(
@@ -96,6 +129,7 @@ class _ChatRoomState extends State<ChatRoom> {
 class ChatRoomsTile extends StatelessWidget {
   final String userName;
   final String chatRoomId;
+  final bool isSelected = false;
 
   ChatRoomsTile({this.userName,@required this.chatRoomId});
 
@@ -108,6 +142,30 @@ class ChatRoomsTile extends StatelessWidget {
               chatRoomId: chatRoomId,
             )
         ));
+      },
+      onLongPress: (){
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text("Delete"),
+            content: Text("Are you sure ???"),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Firestore.instance.collection("chatRoom").document(chatRoomId).delete();
+                  Navigator.of(ctx).pop();
+                },
+                child: Text("Yes"),
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+                child: Text("No"),
+              ),
+            ],
+          ),
+        );
       },
       child: Container(
         color: Colors.black26,
@@ -158,4 +216,12 @@ class ChatRoomsTile extends StatelessWidget {
         ),
       );
   }
+
+}
+
+class Choice{
+  const Choice({this.title, this.icon});
+
+  final String title;
+  final IconData icon;
 }

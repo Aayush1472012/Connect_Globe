@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:connect_globe/helper/authenticate.dart';
 import 'package:connect_globe/helper/helperfunctions.dart';
 import 'package:connect_globe/screens/chatrooms.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 

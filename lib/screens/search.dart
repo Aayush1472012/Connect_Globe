@@ -130,8 +130,6 @@ class _SearchState extends State<Search> {
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

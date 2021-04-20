@@ -43,13 +43,22 @@ class DatabaseMethods {
         .snapshots();
   }
 
-
   Future<void> addMessage(String chatRoomId, chatMessageData){
 
     Firestore.instance.collection("chatRoom")
         .document(chatRoomId)
         .collection("chats")
         .add(chatMessageData).catchError((e){
+      print(e.toString());
+    });
+  }
+
+  Future<void> addImage(String chatRoomId, imgurl){
+
+    Firestore.instance.collection("chatRoom")
+        .document(chatRoomId)
+        .collection("chats")
+        .add(imgurl).catchError((e){
       print(e.toString());
     });
   }
